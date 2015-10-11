@@ -466,6 +466,6 @@ output: index.html
 --
 ### Lets Go 
 
-* http://denny.one/HackGen-2014-workshop/#44
+* http://denny.one/SITCON-Workshop-2015-Apr-git/
 
 * <a href="denny.html#44">讓我看看！</a>

@@ -9,7 +9,7 @@ output: denny.html
 <br />
 
 ## Denny Huang
-## 2015/8/3
+## 2015/4/25
 
 --
 
@@ -675,6 +675,10 @@ output: denny.html
 
 --
 
+# .gitkeep
+
+--
+
 ### Unstage file
 
 * `git reset <file>`
@@ -921,6 +925,7 @@ output: denny.html
 
 # Practice
 ## Pull from remote repo
+## Resolving conflict
 
 --
 
@@ -932,6 +937,11 @@ output: denny.html
 
 # `git pull`
 ## `git fetch` + `git merge`
+
+--
+
+# Merge conflict
+## `git mergetool`
 
 --
 
@@ -948,12 +958,6 @@ output: denny.html
 <div align="center">
   <img style="width:450px" src="./img/git_branching_model.png" />
 </div>
-
---
-
-<a href="http://pages.github.com/" target="_blank">
-  <h1>GitHub Pages</h1>
-</a>
 
 --
 
@@ -1006,6 +1010,13 @@ output: denny.html
 * `git merge --no-ff`
 
 --
+
+<h1 style="font-size: 68px">
+  剩下就是你們的事了
+</h1>
+
+--
+
 ### Something useful
 
 * <a href="http://pages.github.com/" target="_blank">GitHub Pages</a>
@@ -1085,4 +1096,5 @@ function parse\_git\_branch {<br />
 <h2 style="font-size: 18px">
 本投影片採用<a href="http://creativecommons.org/licenses/by-sa/3.0/tw/" target="_blank">創用 CC「姓名標示—相同方式分享 3.0 台灣」授權條款</a>
 </h2>
+
 
