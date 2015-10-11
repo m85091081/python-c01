@@ -1,0 +1,1613 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>Git</title>
+  <style type="text/css">
+    body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: #222;
+  background-color: #f7f7f7;
+  font-size: 100%;
+}
+
+.slide {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 0; right: 0;
+}
+
+.slide-content {
+  width: 800px;
+  height: 600px;
+  overflow: hidden;
+  margin: 80px auto 0 auto;
+  padding: 30px;
+
+  font-weight: 200;
+  font-size: 200%;
+  line-height: 1.375;
+}
+
+.controls {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+}
+
+.arrow {
+  width: 0; height: 0;
+  border: 30px solid #333;
+  float: left;
+  margin-right: 30px;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.prev {
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+
+  border-left-width: 0;
+  border-right-width: 50px;
+}
+
+.next {
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  border-right-color: transparent;
+
+  border-left-width: 50px;
+  border-right-width: 0;
+}
+
+.prev:hover {
+  border-right-color: #888;
+  cursor: pointer;
+}
+
+.next:hover {
+  border-left-color: #888;
+  cursor: pointer;
+}
+
+h1 {
+  font-size: 300%;
+  line-height: 1.2;
+  text-align: center;
+  margin: 170px 0 0;
+}
+
+h2 {
+  font-size: 100%;
+  line-height: 1.2;
+  margin: 5px 0;
+  text-align: center;
+  font-weight: 200;
+}
+
+h3 {
+  font-size: 140%;
+  line-height: 1.2;
+  border-bottom: 1px solid #aaa;
+  margin: 0;
+  padding-bottom: 15px;
+}
+
+ul {
+  padding: 20px 0 0 60px;
+  font-weight: 200;
+  line-height: 1.375;
+}
+
+.author h1 {
+  font-size: 170%;
+  font-weight: 200;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.author h3 {
+  font-weight: 100;
+  text-align: center;
+  font-size: 95%;
+  border: none;
+}
+
+a {
+  text-decoration: none;
+  color: #44a4dd;
+}
+
+a:hover {
+  color: #66b5ff;
+}
+
+pre {
+  font-size: 60%;
+  line-height: 1.3;
+}
+
+.progress {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+
+.progress-bar {
+  width: 0%;
+  height: 3px;
+  background-color: #b4b4b4;
+
+  -webkit-transition: width 0.05s ease-out;
+  -moz-transition: width 0.05s ease-out;
+  -o-transition: width 0.05s ease-out;
+  transition: width 0.05s ease-out;
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-width: 850px) {
+
+  body {
+    font-size: 70%;
+  }
+
+  .slide-content {
+    width: auto;
+  }
+
+  img {
+    width: 100%;
+  }
+
+  h1 {
+    margin-top: 120px;
+  }
+
+  .prev, .prev:hover {
+    border-right-color: rgba(135, 135, 135, 0.5);
+  }
+
+  .next, .next:hover {
+    border-left-color: rgba(135, 135, 135, 0.5);
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 50%;
+    overflow: hidden;
+  }
+
+  .slide-content {
+    padding: 10px;
+    margin-top: 10px;
+    height: 340px;
+  }
+
+  h1 {
+    margin-top: 50px;
+  }
+
+  ul {
+    padding-left: 25px;
+  }
+}
+
+@media print {
+  * {
+    -webkit-print-color-adjust: exact;
+  }
+
+  @page {
+    size: letter;
+  }
+
+  .hidden {
+    display: inline;
+  }
+
+  html {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  body {
+    margin: 0 auto !important;
+    border: 0;
+    padding: 0;
+    float: none !important;
+    overflow: visible;
+    background: none !important;
+    font-size: 52%;
+  }
+
+  .progress, .controls {
+    display: none;
+  }
+
+  .slide {
+    position: static;
+  }
+
+  .slide-content {
+    border: 1px solid #222;
+    margin-top: 0;
+    margin-bottom: 40px;
+    height: 3.5in;
+    overflow: visible;
+  }
+
+  .slide:nth-child(even) {
+    /* 2 slides per page */
+    page-break-before: always;
+  }
+}
+
+/*
+github.com style (c) Vasily Polovnyov <vast@whiteants.net>
+*/
+
+code, pre {
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  overflow: auto;
+  padding: 6px 10px;
+}
+
+code {
+  padding: 0 5px;
+}
+
+pre>code {
+  margin: 0; padding: 0;
+  border: none;
+  background: transparent;
+}
+
+pre .comment,
+pre .template_comment,
+pre .diff .header,
+pre .javadoc {
+  color: #998;
+  font-style: italic
+}
+
+pre .keyword,
+pre .css .rule .keyword,
+pre .winutils,
+pre .javascript .title,
+pre .nginx .title,
+pre .subst,
+pre .request,
+pre .status {
+  color: #333;
+  font-weight: bold
+}
+
+pre .number,
+pre .hexcolor,
+pre .ruby .constant {
+  color: #099;
+}
+
+pre .string,
+pre .tag .value,
+pre .phpdoc,
+pre .tex .formula {
+  color: #d14
+}
+
+pre .title,
+pre .id {
+  color: #900;
+  font-weight: bold
+}
+
+pre .javascript .title,
+pre .lisp .title,
+pre .clojure .title,
+pre .subst {
+  font-weight: normal
+}
+
+pre .class .title,
+pre .haskell .type,
+pre .vhdl .literal,
+pre .tex .command {
+  color: #458;
+  font-weight: bold
+}
+
+pre .tag,
+pre .tag .title,
+pre .rules .property,
+pre .django .tag .keyword {
+  color: #000080;
+  font-weight: normal
+}
+
+pre .attribute,
+pre .variable,
+pre .lisp .body {
+  color: #008080
+}
+
+pre .regexp {
+  color: #009926
+}
+
+pre .class {
+  color: #458;
+  font-weight: bold
+}
+
+pre .symbol,
+pre .ruby .symbol .string,
+pre .lisp .keyword,
+pre .tex .special,
+pre .prompt {
+  color: #990073
+}
+
+pre .built_in,
+pre .lisp .title,
+pre .clojure .built_in {
+  color: #0086b3
+}
+
+pre .preprocessor,
+pre .pi,
+pre .doctype,
+pre .shebang,
+pre .cdata {
+  color: #999;
+  font-weight: bold
+}
+
+pre .deletion {
+  background: #fdd
+}
+
+pre .addition {
+  background: #dfd
+}
+
+pre .diff .change {
+  background: #0086b3
+}
+
+pre .chunk {
+  color: #aaa
+}
+
+
+  </style>
+</head>
+<body>
+    <div class="progress">
+    <div class="progress-bar"></div>
+  </div>
+
+  <div class="slide" id="slide-1">
+    <section class="slide-content"><p><h1 style="font-size: 72px">
+    Git
+</h1>
+<br /></p>
+<h2 id="denny-huang">Denny Huang</h2>
+<h2 id="2015-8-3">2015/8/3</h2>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-2">
+    <section class="slide-content"><h3 id="who-am-i-">Who am I ?</h3>
+<p><br /></p>
+<h2 style="font-size: 60px">
+  <b>Denny Huang</b>
+</h2>
+
+<ul>
+<li><p>SITCON 2013, 2014 總召</p>
+</li>
+<li><p><a href="http://about.me/denny0223" target="_blank">About me</a></p>
+</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-3">
+    <section class="slide-content"><h1 id="survey">Survey</h1>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-4">
+    <section class="slide-content"><h1 id="-">是否寫過程式？</h1>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-5">
+    <section class="slide-content"><p><h1>
+小專題/中大型<br />
+專案開發經驗</p>
+<h1></section>
+  </div>
+  <div class="slide hidden" id="slide-6">
+    <section class="slide-content"><h1 id="-">版本控制經驗</h1>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-7">
+    <section class="slide-content"><h1 id="shell-">Shell 熟悉程度</h1>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-8">
+    <section class="slide-content"><h1 id="git-github">Git / GitHub</h1>
+<h2 id="it-apos-s-different">It&apos;s different</h2>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-9">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-37.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-10">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-38.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-11">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-39.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-12">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-40.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-13">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-41.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-14">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-42.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-15">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-43.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-16">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-44.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-17">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-45.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-18">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-46.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-19">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-47.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-20">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-48.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-21">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-49.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-22">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-50.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-23">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-51.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-24">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-52.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-25">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-53.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-26">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-54.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-27">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-55.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-28">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-56.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-29">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-57.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-30">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-58.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-31">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-59.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-32">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-60.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-33">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-61.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-34">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-62.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-35">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-63.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-36">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-64.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-37">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-65.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-38">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-66.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-39">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-67.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-40">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-68.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-41">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-69.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-42">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-70.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-43">
+    <section class="slide-content"><div align="center">
+  <img style="height:500px; width:660px" src="./img/code_smart_release-71.jpg" />
+</div>
+<div align="right">
+  <font size="3">
+    Source:&nbsp;
+    <a href="https://speakerdeck.com/crboy/code-smart-dont-code-hard" target="_blank">Code Smart, Don&apos;t Code hard</a>&nbsp;
+    by 畢玉泉(CrBoy)&lt;crboy@crboy.net&gt;
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-44">
+    <section class="slide-content"><h3 id="-">攻城屍的救星</h3>
+<h1 id="-">版本控制</h1>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-45">
+    <section class="slide-content"><h1 id="-">版本控制類型</h1>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-46">
+    <section class="slide-content"><h3 id="-">本地端版本控制</h3>
+<div align="center">
+  <br />
+  <img style="height:500px; width:660px" src="./img/18333fig0101-tn.png" />
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-47">
+    <section class="slide-content"><h3 id="-">集中式版本控制系統</h3>
+<div align="center">
+  <br />
+  <img style="height:500px; width:660px" src="./img/18333fig0102-tn.png" />
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-48">
+    <section class="slide-content"><h3 id="-">分散式版本控制系統</h3>
+<div align="center">
+  <img style="height:500px; width:660px" src="./img/18333fig0103-tn.png" />
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-49">
+    <section class="slide-content"><h3 id="-">事前準備</h3>
+<ul>
+<li>註冊 <a href="http://github.com">GitHub</a> 帳號</li>
+<li>確認已安裝 Git<ul>
+<li>在 Terminal 輸入 <code>git</code> 確認</li>
+<li><code>sudo apt-get install git</code></li>
+<li><code>sudo yum install git</code></li>
+</ul>
+</li>
+<li>選擇輔助武器 - 編輯器 (vim, emacs, gedit)</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-50">
+    <section class="slide-content"><h3 id="-">環境設定</h3>
+<p><code>git config --global user.email &quot;you@example.com&quot;</code></p>
+<p><code>git config --global user.name &quot;Your Name&quot;</code></p>
+<p><code>git config --global color.ui true</code></p>
+<p><code>git config --global core.editor vim</code></p>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-51">
+    <section class="slide-content"><h3 id="-">環境設定</h3>
+<p><code>git config --global alias.co commit</code></p>
+<p><code>git config --global alias.lg &quot;log --color --graph --all --pretty=format:&#39;%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)&lt;%an&gt;%Creset&#39; --abbrev-commit --&quot;</code></p>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-52">
+    <section class="slide-content"><h1 id="-gitconfig">.gitconfig</h1>
+<h2 id="why-global-">Why <code>--global</code>?</h2>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-53">
+    <section class="slide-content"><h1 id="practice">Practice</h1>
+<h2 id="create-a-new-repo-on-github">Create a new repo on GitHub</h2>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-54">
+    <section class="slide-content"><h1 id="public-private">Public / Private</h1>
+<div align="center">
+  <a href="https://education.github.com/pack" target="_blank">Student Developer Pack</a>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-55">
+    <section class="slide-content"><h1 id="readme-md">README.md</h1>
+<div align="center">
+  <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" target="_blank">Markdown Cheatsheet</a>
+  <a href="https://guides.github.com/features/mastering-markdown/" target="_blank">Mastering Markdown</a>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-56">
+    <section class="slide-content"><h1 id="-gitignore">.gitignore</h1>
+<div align="center">
+  <a href="https://github.com/github/gitignore" target="_blank">collection of useful .gitignore templates</a><br />
+  <a href="https://git-lfs.github.com/" target="_blank">Git Large File Storage</a>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-57">
+    <section class="slide-content"><h1 id="license">License</h1>
+<div align="center">
+  <a href="http://www.openfoundry.org/tw/licenses" target="_blank">授權條款介紹 - OpenFoundry</a>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-58">
+    <section class="slide-content"><h1 id="practice">Practice</h1>
+<h2 id="delete-the-repository">Delete the repository</h2>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-59">
+    <section class="slide-content"><h1 id="practice">Practice</h1>
+<h2 id="create-an-new-repo-without-initialization">Create an new repo without initialization</h2>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-60">
+    <section class="slide-content"><h1 id="practice">Practice</h1>
+<h2 id="create-a-new-local-repository">Create a new local repository</h2>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-61">
+    <section class="slide-content"><p><h1 style="font-size: 72px">
+  <code>git help &lt;command&gt;</code>
+</command></p>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-62">
+    <section class="slide-content"><h1 id="-git-init-"><code>git init</code></h1>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-63">
+    <section class="slide-content"><h1 id="practice">Practice</h1>
+<h2 id="add-file-to-staging-area">Add file to staging area</h2>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-64">
+    <section class="slide-content"><div align="center">
+  <img src="./img/index1@2x.png" />
+</div>
+<div align="left">
+  <a style="font-size: 25px" href="javascript: jumpPrePage()">back</a>
+</div>
+<div align="right">
+  <font size="4">
+    <a href="http://git-scm.com/about/staging-area" target="_blank">圖片來源</a>
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-65">
+    <section class="slide-content"><h1 id="-touch-readme-md-"><code>touch README.md</code></h1>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-66">
+    <section class="slide-content"><h1 id="-git-status-"><code>git status</code></h1>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-67">
+    <section class="slide-content"><h3 id="add-file-to-staging-area">Add file to staging area</h3>
+<ul>
+<li><p><code>git add README.md</code></p>
+</li>
+<li><p><code>git add .</code></p>
+</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-68">
+    <section class="slide-content"><h3 id="unstage-file">Unstage file</h3>
+<ul>
+<li><code>git reset &lt;file&gt;</code></li>
+</ul>
+<p><br />
+<br />
+<br /></p>
+<div align="right">
+  <a style="font-size: 25px" href="javascript: jumpPage(64)">img</a>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-69">
+    <section class="slide-content"><h1 id="practice">Practice</h1>
+<h2 id="commit-to-repository">Commit to repository</h2>
+<div align="right">
+  <a style="font-size: 25px" href="javascript: jumpPage(64)">img</a>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-70">
+    <section class="slide-content"><h3 id="before-commit">Before commit</h3>
+<ul>
+<li><p><code>git status</code></p>
+</li>
+<li><p><code>git diff</code></p>
+</li>
+<li><p><code>git diff --cached</code></p>
+</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-71">
+    <section class="slide-content"><h3 id="commit">Commit</h3>
+<ul>
+<li><p><code>git commit</code></p>
+</li>
+<li><p><code>git commit -m &quot;first commit&quot;</code></p>
+</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-72">
+    <section class="slide-content"><h1 id="-commit-">何時該 commit？</h1>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-73">
+    <section class="slide-content"><p><h1 style="font-size: 72px">
+  commit log 怎麼寫？
+</h1></p>
+<div align="center">
+  <a style="font-size: 30px" href="./img/yo.png" target="_blank">yo</a>
+</div>
+<div align="right">
+  <a style="font-size: 15px" href="http://www.reddit.com/r/shittyprogramming/comments/1skq3s/my_buddy_is_a_phenomenal_programmer_but_really/" target="_blank">圖片來源</a>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-74">
+    <section class="slide-content"><h1 id="-git-commit-a-"><code>git commit -a</code></h1>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-75">
+    <section class="slide-content"><div align="center">
+  <img src="./img/index2@2x.png" />
+</div>
+<div align="right">
+  <font size="4">
+    <a href="http://git-scm.com/about/staging-area" target="_blank">圖片來源</a>
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-76">
+    <section class="slide-content"><h1 id="practice">Practice</h1>
+<h2 id="show-commit-message">Show commit message</h2>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-77">
+    <section class="slide-content"><h3 id="show-commit-log">Show commit log</h3>
+<ul>
+<li><p><code>git log</code></p>
+</li>
+<li><p><code>git show &lt;revisions&gt;</code></p>
+</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-78">
+    <section class="slide-content"><p><h1 style="font-size: 60px">
+  SPECIFYING REVISIONS
+</h1></p>
+<div align="center">
+  <a href="https://www.kernel.org/pub/software/scm/git/docs/gitrevisions.html" target="_blank">gitrevisions(7) Manual Page</a>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-79">
+    <section class="slide-content"><h1 id="practice">Practice</h1>
+<h2 id="untrack-rename-file">Untrack / Rename file</h2>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-80">
+    <section class="slide-content"><h3 id="remove-file">Remove file</h3>
+<ul>
+<li><code>git rm &lt;file&gt;</code></li>
+</ul>
+<h3 id="untrack-file">Untrack file</h3>
+<ul>
+<li><code>git rm --cached &lt;file&gt;</code></li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-81">
+    <section class="slide-content"><h3 id="rename-file">Rename file</h3>
+<ul>
+<li><code>git mv &lt;file&gt;</code></li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-82">
+    <section class="slide-content"><h1 id="practice">Practice</h1>
+<h2 id="back-to-the-past">Back to the past</h2>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-83">
+    <section class="slide-content"><h3 id="checkout-to-previous-version">Checkout to previous version</h3>
+<ul>
+<li><code>git checkout &lt;revision&gt;</code></li>
+</ul>
+<h3 id="checkout-file-from-previous-version">Checkout file from previous version</h3>
+<ul>
+<li><code>git checkout &lt;revision&gt; &lt;file&gt;</code></li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-84">
+    <section class="slide-content"><h3 id="stash-files">Stash files</h3>
+<ul>
+<li><p><code>git stash</code></p>
+</li>
+<li><p><code>git stash save &quot;message&quot;</code></p>
+</li>
+<li><p><code>git stash list</code></p>
+</li>
+<li><p><code>git stash pop</code></p>
+</li>
+<li><p><code>git stash show -p &lt;revision&gt;</code></p>
+</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-85">
+    <section class="slide-content"><h3 id="reset-to-previous-version">Reset to previous version</h3>
+<ul>
+<li><p><code>git reset &lt;revision&gt;</code></p>
+</li>
+<li><p><code>git reset --hard &lt;revision&gt;</code></p>
+</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-86">
+    <section class="slide-content"><h3 id="revert-commit">Revert commit</h3>
+<ul>
+<li><code>git revert &lt;revision&gt;</code></li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-87">
+    <section class="slide-content"><h1 id="practice">Practice</h1>
+<h2 id="push-to-remote-server">Push to remote server</h2>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-88">
+    <section class="slide-content"><h3 id="add-remote-repo">Add remote repo</h3>
+<ul>
+<li><p><code>git remote add origin https://github.com/denny0223/workshop.git</code></p>
+</li>
+<li><p><code>git remote</code></p>
+</li>
+<li><p><code>git remote -v</code></p>
+</li>
+<li><p><code>git remote show origin</code></p>
+</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-89">
+    <section class="slide-content"><div align="center">
+  <img height="500" src="./img/local-remote.png" />
+</div>
+<div align="right">
+  <font size="4">
+    <a href="http://zoomq.qiniudn.com/ZQScrapBook/ZqFLOSS/data/20081210180347/" target="_blank">圖片來源</a>
+  </font>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-90">
+    <section class="slide-content"><h3 id="push-to-remote-repo">Push to remote repo</h3>
+<ul>
+<li><p><code>git push -u origin master</code></p>
+</li>
+<li><p><code>git push origin master</code></p>
+</li>
+<li><p><code>git push</code></p>
+</li>
+<li><p><a href="http://stackoverflow.com/a/13148313" target="_blank">push.default</a></p>
+</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-91">
+    <section class="slide-content"><h3 id="list-branches">List branches</h3>
+<ul>
+<li><p><code>git branch</code></p>
+</li>
+<li><p><code>git branch -a</code></p>
+</li>
+<li><p><code>git branch -v</code></p>
+</li>
+<li><p><code>git branch -vv</code></p>
+</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-92">
+    <section class="slide-content"><h3 id="cache-https-password">Cache https password</h3>
+<p><code>git config --global credential.helper cache</code></p>
+<p><code>git config --global credential.helper &quot;cache --timeout=3600&quot;</code></p>
+<p><br /></p>
+<div align="right">
+<a href="http://stackoverflow.com/questions/5343068/is-there-a-way-to-skip-password-typing-when-using-https-github/5343146#5343146">more</a>
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-93">
+    <section class="slide-content"><h1 id="practice">Practice</h1>
+<h2 id="clone-your-repo-via-ssh">Clone your repo via ssh</h2>
+<h2 id="try-to-commit-and-push">try to commit and push</h2>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-94">
+    <section class="slide-content"><h1 id="-git-clone-"><code>git clone</code></h1>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-95">
+    <section class="slide-content"><p><br /><br /><br /></p>
+<h2 id="please-make-sure-you-have-the-correct-access-rights">Please make sure you have the correct access rights</h2>
+<h2 id="and-the-repository-exists-">and the repository exists.</h2>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-96">
+    <section class="slide-content"><h1 style="font-size: 75px">
+  <a href="https://help.github.com/articles/generating-ssh-keys" target="_blank">Generating SSH keys</a>
+</h1></section>
+  </div>
+  <div class="slide hidden" id="slide-97">
+    <section class="slide-content"><h1 id="practice">Practice</h1>
+<h2 id="pull-from-remote-repo">Pull from remote repo</h2>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-98">
+    <section class="slide-content"><h1 style="font-size: 36px">
+  Add a new commit at remote via https repo.
+</h1></section>
+  </div>
+  <div class="slide hidden" id="slide-99">
+    <section class="slide-content"><h1 id="-git-pull-"><code>git pull</code></h1>
+<h2 id="-git-fetch-git-merge-"><code>git fetch</code> + <code>git merge</code></h2>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-100">
+    <section class="slide-content"><h1 style="font-size: 72px">
+  <code>git pull --rebase</code>
+</h1></section>
+  </div>
+  <div class="slide hidden" id="slide-101">
+    <section class="slide-content"><h1 id="branch">Branch</h1>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-102">
+    <section class="slide-content"><div align="center">
+  <img style="width:450px" src="./img/git_branching_model.png" />
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-103">
+    <section class="slide-content"><p><a href="http://pages.github.com/" target="_blank">
+  <h1>GitHub Pages</h1>
+</a></p>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-104">
+    <section class="slide-content"><h1 id="practice">Practice</h1>
+<h2 id="create-a-branch">Create a branch</h2>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-105">
+    <section class="slide-content"><h3 id="create-a-branch">Create a branch</h3>
+<ul>
+<li><p><code>git branch &lt;branch name&gt;</code></p>
+</li>
+<li><p><code>git checkout -b &lt;branch name&gt;</code></p>
+</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-106">
+    <section class="slide-content"><h1 id="practice">Practice</h1>
+<h2 id="commit-and-push-new-branch-to-remote">commit and push new branch to remote</h2>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-107">
+    <section class="slide-content"><h3 id="push-when-local-and-remote-branch-name-difference">Push when local and remote branch name difference</h3>
+<ul>
+<li><code>git push &lt;remote&gt; &lt;local_branch_name&gt;:&lt;remote_branch_name&gt;</code></li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-108">
+    <section class="slide-content"><h1 id="git-flow">Git Flow</h1>
+<h2>
+  <a href="http://nvie.com/posts/a-successful-git-branching-model/" target="_blank">A successful Git branching model</a>
+</h2></section>
+  </div>
+  <div class="slide hidden" id="slide-109">
+    <section class="slide-content"><div align="center">
+  <img style="width:450px" src="./img/git_branching_model.png" />
+</div></section>
+  </div>
+  <div class="slide hidden" id="slide-110">
+    <section class="slide-content"><h1 id="practice">Practice</h1>
+<h2 id="merge-branches">merge branches</h2>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-111">
+    <section class="slide-content"><h3 id="merge">Merge</h3>
+<ul>
+<li><p><code>git merge</code></p>
+</li>
+<li><p><code>git merge --no-ff</code></p>
+</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-112">
+    <section class="slide-content"><h3 id="something-useful">Something useful</h3>
+<ul>
+<li><p><a href="http://pages.github.com/" target="_blank">GitHub Pages</a></p>
+</li>
+<li><p><a href="https://github.com/k4rthik/git-cal" target="_blank">git-cal</a></p>
+</li>
+<li><p><a href="http://pcottle.github.io/learnGitBranching/" target="_blank">Learn Git Branching</a></p>
+</li>
+<li><p><a href="https://github.com/JuanitoFatas/git-style-guide/blob/master/README.md" target="_blank">git-style-guide</a></p>
+</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-113">
+    <section class="slide-content"><h3 id="something-useful-cnt-">Something useful (cnt.</h3>
+<ul>
+<li><p><a href="https://guides.github.com/" target="_blank">GitHub Guides</a></p>
+</li>
+<li><p><a href="https://github.com/jlord/git-it/blob/master/README-zhtw.md" target="_blank">Git-it</a></p>
+</li>
+<li><p><a href="http://onlywei.github.io/explain-git-with-d3/" target="_blank">Visualizing Git Concepts with D3</a></p>
+</li>
+</ul>
+<h3 id="just-for-fun">Just for fun</h3>
+<ul>
+<li><a href="https://github.com/gelstudios/gitfiti" target="_blank">gitfiti</a></li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-114">
+    <section class="slide-content"><h3 id="show-branch-names-in-ps1">Show branch names in $PS1</h3>
+<p><a href="http://xta.github.io/HalloweenBash/" target="_blank">Halloween Bash Profile Generator</a></p>
+<p><code>
+function parse_git_branch {<br />
+&nbsp;&nbsp; git branch --no-color 2&gt; /dev/null | sed -e &#39;/^[^*]/d&#39; -e &#39;s/<em> (.</em>)/(\1)/&#39; <br />
+}<br />
+</code></p>
+<p><code>export PS1=&quot;\h:\W \u\$(parse_git_branch)$ &quot;</code></p>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-115">
+    <section class="slide-content"><h3 id="resources">Resources</h3>
+<ul>
+<li><p><a href="http://git-scm.com/book" target="_blank">Pro Git</a></p>
+</li>
+<li><p><a href="http://git-scm.com/book/zh-tw" target="_blank">Pro Git (zh-tw)</a></p>
+</li>
+<li><p><a href="http://ihower.tw/git/" target="_blank">版本控制系統 Git 精要</a></p>
+</li>
+<li><p><a href="http://www-cs-students.stanford.edu/~blynn/gitmagic/intl/zh_tw/" target="_blank">Git Magic</a></p>
+</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-116">
+    <section class="slide-content"><h3 id="resources-cnt-">Resources (cnt.</h3>
+<ul>
+<li><p><a href="http://backlogtool.com/git-guide/en/" target="_blank">Git Beginner&#39;s Guide for Dummies</a></p>
+</li>
+<li><p><a href="http://backlogtool.com/git-guide//tw/" target="_blank">連猴子都能懂的Git入門〜掌握版本控制〜</a></p>
+</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-117">
+    <section class="slide-content"><h2 id="10-year">10 year</h2>
+<ul>
+<li><p><a href="https://www.atlassian.com/git/articles/10-years-of-git/" target="_blank">10 Years of Git</a></p>
+</li>
+<li><p><a href="http://ithome.com.tw/news/95088" target="_blank">Git 十歲了！Git 之父 Linus Torvalds 說古，大談 Git 的起源</a></p>
+</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden" id="slide-118">
+    <section class="slide-content"><h1 style="font-size: 72px">
+  Thanks for listening!
+</h1>
+
+<p><br /><br /><br /></p>
+<p><div align="center">
+  <img style="width:100px;" src="./img/by-sa.png" />
+</div></p>
+<h2 style="font-size: 18px">
+本投影片採用<a href="http://creativecommons.org/licenses/by-sa/3.0/tw/" target="_blank">創用 CC「姓名標示—相同方式分享 3.0 台灣」授權條款</a>
+</h2></section>
+  </div>
+
+  <div class="controls">
+    <div class="arrow prev"></div>
+    <div class="arrow next"></div>
+  </div>
+
+
+  <script type="text/javascript">
+    /**
+ * Returns the current page number of the presentation.
+ */
+function currentPosition() {
+  return parseInt(document.querySelector('.slide:not(.hidden)').id.slice(6));
+}
+
+
+/**
+ * Navigates forward n pages
+ * If n is negative, we will navigate in reverse
+ */
+function navigate(n) {
+  var position = currentPosition();
+  var numSlides = document.getElementsByClassName('slide').length;
+
+  /* Positions are 1-indexed, so we need to add and subtract 1 */
+  var nextPosition = (position - 1 + n) % numSlides + 1;
+
+  /* Normalize nextPosition in-case of a negative modulo result */
+  nextPosition = (nextPosition - 1 + numSlides) % numSlides + 1;
+
+  document.getElementById('slide-' + position).classList.add('hidden');
+  document.getElementById('slide-' + nextPosition).classList.remove('hidden');
+
+  updateProgress();
+  updateURL();
+  updateTabIndex();
+}
+
+
+/**
+ * Updates the current URL to include a hashtag of the current page number.
+ */
+function updateURL() {
+  window.history.replaceState({} , null, '#' + currentPosition());
+}
+
+
+/**
+ * Sets the progress indicator.
+ */
+function updateProgress() {
+  var progressBar = document.querySelector('.progress-bar');
+
+  if (progressBar !== null) {
+    var numSlides = document.getElementsByClassName('slide').length;
+    var position = currentPosition() - 1;
+    var percent = (numSlides === 1) ? 100 : 100 * position / (numSlides - 1);
+    progressBar.style.width = percent.toString() + '%';
+  }
+}
+
+
+/**
+ * Removes tabindex property from all links on the current slide, sets
+ * tabindex = -1 for all links on other slides. Prevents slides from appearing
+ * out of control.
+ */
+function updateTabIndex() {
+  var allLinks = document.querySelectorAll('.slide a');
+  var position = currentPosition();
+  var currentPageLinks = document.getElementById('slide-' + position).querySelectorAll('a');
+  var i;
+
+  for (i = 0; i < allLinks.length; i++) {
+    allLinks[i].setAttribute('tabindex', -1);
+  }
+
+  for (i = 0; i < currentPageLinks.length; i++) {
+    currentPageLinks[i].removeAttribute('tabindex');
+  }
+}
+
+/**
+ * Determines whether or not we are currently in full screen mode
+ */
+function isFullScreen() {
+  return document.fullscreenElement ||
+         document.mozFullScreenElement ||
+         document.webkitFullscreenElement ||
+         document.msFullscreenElement;
+}
+
+/**
+ * Toggle fullScreen mode on document element.
+ * Works on chrome (>= 15), firefox (>= 9), ie (>= 11), opera(>= 12.1), safari (>= 5).
+ */
+function toggleFullScreen() {
+  /* Convenient renames */
+  var docElem = document.documentElement;
+  var doc = document;
+
+  docElem.requestFullscreen =
+      docElem.requestFullscreen ||
+      docElem.msRequestFullscreen ||
+      docElem.mozRequestFullScreen ||
+      docElem.webkitRequestFullscreen.bind(docElem, Element.ALLOW_KEYBOARD_INPUT);
+
+  doc.exitFullscreen =
+      doc.exitFullscreen ||
+      doc.msExitFullscreen ||
+      doc.mozCancelFullScreen ||
+      doc.webkitExitFullscreen;
+
+  isFullScreen() ? doc.exitFullscreen() : docElem.requestFullscreen();
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  // Update the tabindex to prevent weird slide transitioning
+  updateTabIndex();
+
+  // If the location hash specifies a page number, go to it.
+  var page = window.location.hash.slice(1);
+  if (page) {
+    navigate(parseInt(page) - 1);
+  }
+
+  document.onkeydown = function (e) {
+    var kc = e.keyCode;
+
+    // left, down, H, J, backspace, PgUp - BACK
+    // up, right, K, L, space, PgDn - FORWARD
+    // enter - FULLSCREEN
+    if (kc === 37 || kc === 40 || kc === 8 || kc === 72 || kc === 74 || kc === 33) {
+      navigate(-1);
+    } else if (kc === 38 || kc === 39 || kc === 32 || kc === 75 || kc === 76 || kc === 34) {
+      navigate(1);
+    } else if (kc === 13) {
+      toggleFullScreen();
+    }
+  };
+
+  if (document.querySelector('.next') && document.querySelector('.prev')) {
+    document.querySelector('.next').onclick = function (e) {
+      e.preventDefault();
+      navigate(1);
+    };
+
+    document.querySelector('.prev').onclick = function (e) {
+      e.preventDefault();
+      navigate(-1);
+    };
+  }
+});
+
+
+  </script>
+</body>
+</html>
